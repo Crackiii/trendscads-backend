@@ -4,12 +4,12 @@ import express from "express";
 const app = express();
 
 // Express configuration
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 4000);
 
 /**
  * API examples routes.
  */
-app.get("/api", () => "");
+app.get("/", (req, res) => res.send("Welcome to my trendscads backend"));
 
 
 export default app;
