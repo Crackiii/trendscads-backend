@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String   @db.VarChar(255)
+  content   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  name    String?
+  posts   Post[]
+  profile Profile?
+}
+
+
+
+model ScrappingLinks {
+  id            Int      @id @default(autoincrement())
+  country       String   @db.VarChar(50)
+  countryShort  String   @db.VarChar(50)
+  category      String   @db.VarChar(50)
+  categoryShort String   @db.VarChar(50)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model StoryIds {
+  id            Int      @id @default(autoincrement())
+  country       String   @db.VarChar(100)
+  category      String   @db.VarChar(100)
+  storyId       String   @db.VarChar(200)
+  relatedLink   String   @db.VarChar(255)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model StoryData {
+  id              Int @id @default(autoincrement())
+  relatedQueries  String @db.Text
+  relatedArticles String @db.Text
+  relatedStoryId  String @db.VarChar(255)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model QueryData {
+  id           Int      @id @default(autoincrement())
+  query        String   @db.Text
+  links        String   @db.Text
+  relatedStory String   @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model WebsiteDate {
+  id             Int    @id @default(autoincrement())
+  titles         String @db.Text
+  descriptions   String @db.Text
+  keywords       String @db.Text
+  favicon        String @db.Text
+  social         String @db.Text
+  images         String @db.Text
+  html           String @db.Text
+  relatedQueryId String @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
