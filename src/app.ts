@@ -5,7 +5,7 @@ import { getFullStories, getWebsiteData, getWebsiteDataBySearch } from "./contro
 const app = express();
 
 // Express configuration
-app.set("port", process.env.NODE_ENV || 8000);
+app.set("port", process.env.PORT || 8000);
 
 app.use(function (_, res, next) {
 
