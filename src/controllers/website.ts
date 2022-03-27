@@ -246,8 +246,8 @@ export const getFullStories = async (req: Request, res: Response) => {
       time: story.created_at,
       query: queryData.query,
       queries: JSON.parse(storyData.related_queries),
-      country: storyLink.country,
-      category: storyLink.category_short,
+      country: storyLink?.country,
+      category: storyLink?.category_short,
     });
   }
 
