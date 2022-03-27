@@ -10,6 +10,8 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
   const offset = Number(req.query.offset);
   const limit = Number(req.query.limit);
 
+  try {
+
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
       titles: {
@@ -46,6 +48,9 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
       url: story.url
     };
   })});
+} catch(error) {
+  console.log("getWebsiteDataBySearch() - ", error.message)
+}
 };
 
 export const getWebsiteDataById = async (id: number) => {
@@ -56,6 +61,10 @@ export const getWebsiteDataById = async (id: number) => {
   const storyData = await prismaClient.story_data.findUnique({where: {id: Number(queryData.related_story)}});
   const storyIds = await prismaClient.story_ids.findMany({where: {id: Number(storyData.related_story_id)}});
   const storyLink = await prismaClient.scrapping_links.findUnique({where: {id: 2305}});
+
+  try {
+    
+
 
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
@@ -132,6 +141,9 @@ export const getWebsiteDataById = async (id: number) => {
   };
 
   return result;
+} catch(error) {
+    console.log("getWebsiteDataById() - ", error.message)
+}
 };
 
 
@@ -166,6 +178,9 @@ export const getWebsiteData = async (req: Request, res: Response) => {
 export const getStories = async (req: Request, res: Response) => {
   const prismaClient = await getPrismaClient();
   const offset = Number(req.query.offset) || 0;
+  try {
+
+
   const topStoriesLinks = await prismaClient.scrapping_links.findMany({
     distinct: "id"
   });
@@ -197,6 +212,9 @@ export const getStories = async (req: Request, res: Response) => {
 
 
   res.send({LENGTH: collectedStoriesData});
+} catch(error) {
+    console.log("getStories() - ", error.message)
+}
 };
 
 
@@ -204,6 +222,9 @@ export const getFullStories = async (req: Request, res: Response) => {
   const prismaClient = await getPrismaClient();
   const offset = Number(req.query.offset) || 0;
   const limit = Number(req.query.limit) || 42;
+
+  try {
+
 
   const websiteData = await prismaClient.website_data.findMany({
     distinct: "id",
@@ -252,4 +273,8 @@ export const getFullStories = async (req: Request, res: Response) => {
   }
 
   res.send({results: filteredProperties});
+} catch(error) {
+      console.log("getFullStories() - ", error.message)
+}
+
 };
