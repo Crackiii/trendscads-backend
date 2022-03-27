@@ -7,10 +7,11 @@
     "build-ts": "tsc",
     "build": "npm run build-ts && npm run lint",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
-    "serve": "node dist/server.js",
+    "serve": "node dist/src/server.js",
+    "watch-node": "nodemon dist/src/server.js",
+    "dev": "npm run build && npm run watch",
     "start": "npm run serve",
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
-    "watch-node": "nodemon dist/server.js",
     "watch-test": "npm run test -- --watchAll",
     "watch-ts": "tsc -w",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\""
@@ -37,9 +38,9 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@prisma/client": "^3.11.0",
+    "@prisma/client": "^3.11.1",
     "errorhandler": "^1.5.1",
     "express": "^4.17.3",
-    "prisma": "^3.11.0"
+    "prisma": "^3.11.1"
   }
 }

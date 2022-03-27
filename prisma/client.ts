@@ -8,7 +8,9 @@ export const getPrismaClient = async (): Promise<PrismaClient> => {
 
   try {
     await prisma.$connect();
+    console.log("Connected to Postgres via Prisma client");
   } catch (error) {
+    console.log(error);
     throw error;
   }
 
