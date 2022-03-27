@@ -10,7 +10,7 @@ app.set("port", process.env.PORT || 8000);
 app.use(function (_, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader("Access-Control-Allow-Origin", "https://www.trendscads.com/");
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
   // Request methods you wish to allow
   res.setHeader("Access-Control-Allow-Methods", "GET");
