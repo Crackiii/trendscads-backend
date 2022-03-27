@@ -4,13 +4,14 @@ import { getPrismaClient } from "../../prisma/client";
 
 
 export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
+  try {
   const prismaClient = await getPrismaClient();
 
   const searchQuery = req.query.searchQuery as string;
   const offset = Number(req.query.offset);
   const limit = Number(req.query.limit);
 
-  try {
+
 
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
@@ -49,11 +50,12 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
     };
   })});
 } catch(error) {
-  console.log("getWebsiteDataBySearch() - ", error.message)
+  console.log("getWebsiteDataBySearch() - ", error.message);
 }
 };
 
 export const getWebsiteDataById = async (id: number) => {
+  try {
   const prismaClient = await getPrismaClient();
 
   const websiteData = await prismaClient.website_data.findUnique({where: {id}});
@@ -62,7 +64,7 @@ export const getWebsiteDataById = async (id: number) => {
   const storyIds = await prismaClient.story_ids.findMany({where: {id: Number(storyData.related_story_id)}});
   const storyLink = await prismaClient.scrapping_links.findUnique({where: {id: 2305}});
 
-  try {
+
     
 
 
@@ -142,7 +144,7 @@ export const getWebsiteDataById = async (id: number) => {
 
   return result;
 } catch(error) {
-    console.log("getWebsiteDataById() - ", error.message)
+    console.log("getWebsiteDataById() - ", error.message);
 }
 };
 
@@ -176,9 +178,10 @@ export const getWebsiteData = async (req: Request, res: Response) => {
 
 
 export const getStories = async (req: Request, res: Response) => {
+  try {
   const prismaClient = await getPrismaClient();
   const offset = Number(req.query.offset) || 0;
-  try {
+
 
 
   const topStoriesLinks = await prismaClient.scrapping_links.findMany({
@@ -213,17 +216,18 @@ export const getStories = async (req: Request, res: Response) => {
 
   res.send({LENGTH: collectedStoriesData});
 } catch(error) {
-    console.log("getStories() - ", error.message)
+    console.log("getStories() - ", error.message);
 }
 };
 
 
 export const getFullStories = async (req: Request, res: Response) => {
+  try {
   const prismaClient = await getPrismaClient();
   const offset = Number(req.query.offset) || 0;
   const limit = Number(req.query.limit) || 42;
 
-  try {
+
 
 
   const websiteData = await prismaClient.website_data.findMany({
@@ -254,6 +258,7 @@ export const getFullStories = async (req: Request, res: Response) => {
     const storyIds = await prismaClient.story_ids.findUnique({where: {id: Number(storyData.related_story_id)}});
     const storyLink = await prismaClient.scrapping_links.findUnique({where: {id: storyIds.id}});
 
+
     filteredProperties.push({
       id: story.id,
       titles: JSON.parse(story.titles),
@@ -274,7 +279,7 @@ export const getFullStories = async (req: Request, res: Response) => {
 
   res.send({results: filteredProperties});
 } catch(error) {
-      console.log("getFullStories() - ", error.message)
+      console.log("getFullStories() - ", error.message);
 }
 
 };
