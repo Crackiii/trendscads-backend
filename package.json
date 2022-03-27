@@ -11,6 +11,7 @@
     "watch-node": "nodemon dist/src/server.js",
     "dev": "npm run build && npm run watch",
     "start": "npm run serve",
+    "heroku-postbuild": "npm run build",
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
     "watch-test": "npm run test -- --watchAll",
     "watch-ts": "tsc -w",
