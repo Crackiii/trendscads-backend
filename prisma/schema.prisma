@@ -11,10 +11,10 @@ datasource db {
 model query_data {
   id            Int      @id @default(autoincrement())
   query         String
-  links         String
   related_story String   @db.VarChar(255)
   created_at    DateTime @default(now())
   updated_at    DateTime @default(now())
+  links         Json[]
 }
 
 model scrapping_links {
@@ -29,11 +29,11 @@ model scrapping_links {
 
 model story_data {
   id               Int      @id @default(autoincrement())
-  related_queries  String
-  related_articles String
   related_story_id String   @db.VarChar(255)
   created_at       DateTime @default(now())
   updated_at       DateTime @default(now())
+  related_queries  Json[]
+  related_articles Json[]
 }
 
 model story_ids {
@@ -49,27 +49,27 @@ model story_ids {
 model website_data {
   id                Int      @id @default(autoincrement())
   titles            String
-  descriptions      String
   keywords          String
   favicon           String
-  social            String
-  images            String
   html              String
   url               String
-  all_images        String
   created_at        DateTime @default(now())
   updated_at        DateTime @default(now())
   is_trending       String
-  related_articles  String
   related_category  String
   related_country   String
-  related_links     String
-  related_news      String
-  related_products  String
-  related_queries   String
   related_query     String
-  related_videos    String
   short_description String
+  descriptions      Json[]
+  images            Json[]
+  all_images        Json[]
+  related_articles  Json[]
+  related_links     Json[]
+  related_news      Json[]
+  related_products  Json[]
+  related_queries   Json[]
+  related_videos    Json[]
+  social            Json[]
 }
 
 model scrapping_errors {

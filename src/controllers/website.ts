@@ -17,13 +17,13 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
         search: searchQuery.split(" ").join(" | "),
       },
       descriptions: {
-        search: searchQuery.split(" ").join(" | ")
+        equals: searchQuery.split(" ").join(" | ")
       },
       keywords: {
         search: searchQuery.split(" ").join(" | "),
       },
       social: {
-        search: searchQuery.split(" ").join(" | ")
+        equals: searchQuery.split(" ").join(" | ")
       }
     },
     skip: offset,
@@ -69,14 +69,17 @@ export const getWebsiteDataById = async (id: number) => {
       titles: {
         search: websiteData.related_query.split(" ").join(" | "),
       },
+      related_queries: {
+        equals: websiteData.related_query.split(" ").join(" | ")
+      },
       descriptions: {
-        search: websiteData.related_query.split(" ").join(" | ")
+        equals: websiteData.related_query.split(" ").join(" | ")
       },
       keywords: {
         search: websiteData.related_query.split(" ").join(" | "),
       },
       social: {
-        search: websiteData.related_query.split(" ").join(" | ")
+        equals: websiteData.related_query.split(" ").join(" | ")
       }
     },
     skip: 0,
