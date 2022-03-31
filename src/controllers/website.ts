@@ -218,8 +218,6 @@ export const getFullStories = async (req: Request, res: Response) => {
   const limit = Number(req.query.limit) || 42;
 
 
-
-
   const websiteData = await prismaClient.website_data.findMany({
     distinct: "id",
     skip: offset,
@@ -240,6 +238,8 @@ export const getFullStories = async (req: Request, res: Response) => {
       related_country: true
     }
   });
+
+  console.log({websiteData});
 
 
 
@@ -263,6 +263,8 @@ export const getFullStories = async (req: Request, res: Response) => {
       category: story?.related_country.split("-")[1].trim(),
     });
   }
+
+  console.log({filteredProperties});
 
   res.send({results: filteredProperties});
 } catch(error) {
