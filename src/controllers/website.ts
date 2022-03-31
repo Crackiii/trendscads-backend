@@ -60,6 +60,9 @@ export const getWebsiteDataById = async (id: number) => {
 
   const websiteData = await prismaClient.website_data.findUnique({where: {id}});
 
+  if(!websiteData) {
+    throw new Error("Website data not found").name = "NotFound";
+  }
 
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
