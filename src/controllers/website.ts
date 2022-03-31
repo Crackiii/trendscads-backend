@@ -16,15 +16,15 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
       titles: {
         search: searchQuery.split(" ").join(" | "),
       },
-      descriptions: {
-        equals: searchQuery.split(" ").join(" | ")
-      },
+      // descriptions: {
+      //   equals: searchQuery.split(" ").join(" | ")
+      // },
       keywords: {
         search: searchQuery.split(" ").join(" | "),
       },
-      social: {
-        equals: searchQuery.split(" ").join(" | ")
-      }
+      // social: {
+      //   equals: searchQuery.split(" ").join(" | ")
+      // }
     },
     skip: offset,
     take: limit
@@ -69,18 +69,18 @@ export const getWebsiteDataById = async (id: number) => {
       titles: {
         search: websiteData.related_query.split(" ").join(" | "),
       },
-      related_queries: {
-        equals: websiteData.related_query.split(" ").join(" | ")
-      },
-      descriptions: {
-        equals: websiteData.related_query.split(" ").join(" | ")
-      },
+      // related_queries: {
+      //   equals: websiteData.related_query.split(" ").join(" | ")
+      // },
+      // descriptions: {
+      //   equals: websiteData.related_query.split(" ").join(" | ")
+      // },
       keywords: {
         search: websiteData.related_query.split(" ").join(" | "),
       },
-      social: {
-        equals: websiteData.related_query.split(" ").join(" | ")
-      }
+      // social: {
+      //   equals: websiteData.related_query.split(" ").join(" | ")
+      // }
     },
     skip: 0,
     take: 80

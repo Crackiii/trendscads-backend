@@ -14,7 +14,7 @@ model query_data {
   related_story String   @db.VarChar(255)
   created_at    DateTime @default(now())
   updated_at    DateTime @default(now())
-  links         Json[]
+  links         Json
 }
 
 model scrapping_links {
@@ -32,8 +32,8 @@ model story_data {
   related_story_id String   @db.VarChar(255)
   created_at       DateTime @default(now())
   updated_at       DateTime @default(now())
-  related_queries  Json[]
-  related_articles Json[]
+  related_queries  Json
+  related_articles Json
 }
 
 model story_ids {
@@ -60,16 +60,16 @@ model website_data {
   related_country   String
   related_query     String
   short_description String
-  descriptions      Json[]
-  images            Json[]
-  all_images        Json[]
-  related_articles  Json[]
-  related_links     Json[]
-  related_news      Json[]
-  related_products  Json[]
-  related_queries   Json[]
-  related_videos    Json[]
-  social            Json[]
+  descriptions      Json
+  images            Json
+  all_images        Json
+  related_articles  Json
+  related_links     Json
+  related_news      Json
+  related_products  Json
+  related_queries   Json
+  related_videos    Json
+  social            Json
 }
 
 model scrapping_errors {
