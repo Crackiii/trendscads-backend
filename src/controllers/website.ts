@@ -11,8 +11,6 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
   const offset = Number(req.query.offset);
   const limit = Number(req.query.limit);
 
-
-
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
       titles: {
@@ -36,15 +34,18 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
     delete story.html;
     delete story.updated_at;
     delete story.social;
+    delete story.related_articles;
+    delete story.related_queries;
+    delete story.related_links;
 
     return {
-      all_images: JSON.parse(story.all_images),
+      all_images: story.all_images,
       date: story.created_at,
-      descriptions: JSON.parse(story.descriptions),
+      descriptions: story.descriptions,
       id: story.id,
-      images: JSON.parse(story.images),
+      images: story.images,
       keywords: story.keywords,
-      titles: JSON.parse(story.titles),
+      titles: story.titles,
       url: story.url
     };
   })});
@@ -59,9 +60,6 @@ export const getWebsiteDataById = async (id: number) => {
 
   const websiteData = await prismaClient.website_data.findUnique({where: {id}});
 
-
-  console.log({websiteData});
-  
 
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
@@ -86,50 +84,46 @@ export const getWebsiteDataById = async (id: number) => {
 
   const result = {
     websiteData: {
-      descriptions: JSON.parse(websiteData?.descriptions),
+      descriptions:websiteData?.descriptions,
       favicon: websiteData?.favicon,
       html: websiteData.html,
-      images: JSON.parse(websiteData.images),
+      images: websiteData.images,
       keywords: websiteData.keywords.split(","),
-      social: JSON.parse(websiteData.social),
-      titles: JSON.parse(websiteData.titles),
-      all_images: JSON.parse(websiteData.all_images),
+      social: websiteData.social,
+      titles: websiteData.titles,
+      all_images: websiteData.all_images,
       time: websiteData.created_at,
       url: websiteData.url,
-    },
-    queryData: {
       query: websiteData?.related_query,
-      links: JSON.parse(websiteData?.related_links)
-    },
-    storyData: {
-      related_articles: JSON.parse(websiteData?.related_articles),
-      related_queries: JSON.parse(websiteData?.related_queries)
-    },
-    storyIds: {
+      links: (websiteData?.related_links),
+      related_articles: websiteData?.related_articles,
+      related_queries: websiteData?.related_queries,
       storiesIds: [] as string[],
-    },
-    storyLink: {
       country: websiteData?.related_country.split("-")[0].trim(),
       country_short: websiteData?.related_country.split("-")[1].trim(),
       category: websiteData?.related_category.split("-")[0].trim(),
       category_short: websiteData?.related_category.split("-")[1].trim(),
-    },
-    allStories: mixedStories.map((story) => {
-      delete story.html;
-      delete story.updated_at;
-      delete story.social;
-  
-      return {
-        all_images: JSON.parse(story.all_images),
-        date: story.created_at,
-        descriptions: JSON.parse(story.descriptions),
-        id: story.id,
-        images: JSON.parse(story.images),
-        keywords: story.keywords,
-        titles: JSON.parse(story.titles),
-        url: story.url
-      };
-    })
+      
+      allStories: mixedStories.map((story) => {
+        delete story.html;
+        delete story.updated_at;
+        delete story.social;
+        delete story.related_articles;
+        delete story.related_queries;
+        delete story.related_links;
+    
+        return {
+          all_images:story.all_images,
+          date: story.created_at,
+          descriptions:story.descriptions,
+          id: story.id,
+          images:story.images,
+          keywords: story.keywords,
+          titles:story.titles,
+          url: story.url
+        };
+      })
+    }
   };
 
   return result;
@@ -142,7 +136,6 @@ export const getWebsiteDataById = async (id: number) => {
 export const getWebsiteDataByExactQuery = async (query: string) => {
   return {query};
 };
-
 
 
 export const getWebsiteData = async (req: Request, res: Response) => {
@@ -162,8 +155,6 @@ export const getWebsiteData = async (req: Request, res: Response) => {
 
   res.send(results);
 }; 
-
-
 
 
 
@@ -219,7 +210,6 @@ export const getFullStories = async (req: Request, res: Response) => {
 
 
   const websiteData = await prismaClient.website_data.findMany({
-    distinct: "id",
     skip: offset,
     take: limit,
     select: {
@@ -235,36 +225,32 @@ export const getFullStories = async (req: Request, res: Response) => {
       created_at: true,
       related_query: true,
       related_queries: true,
-      related_country: true
+      related_country: true,
+      related_category: true,
+      short_description: true
     }
   });
-
-  console.log({websiteData});
-
-
-
   const filteredProperties = [];
   for(const story of websiteData) {
 
     filteredProperties.push({
       id: story.id,
-      titles: JSON.parse(story.titles),
-      descriptions: JSON.parse(story.descriptions),
+      titles: story.titles,
+      descriptions: story.descriptions,
+      short_description: story.short_description,
       keywords: story.keywords,
       favicon: story.favicon,
-      social: JSON.parse(story.social),
-      images: JSON.parse(story.images),
-      allImages: JSON.parse(story.all_images),
+      social: story.social,
+      images: story.images,
+      allImages: story.all_images,
       source: story.url,
       time: story.created_at,
       query: story.related_query,
-      queries: JSON.parse(story.related_queries),
+      queries: story.related_queries,
       country: story?.related_country.split("-")[0].trim(),
-      category: story?.related_country.split("-")[1].trim(),
+      category: story?.related_category.split("-")[0].trim(),
     });
   }
-
-  console.log({filteredProperties});
 
   res.send({results: filteredProperties});
 } catch(error) {
