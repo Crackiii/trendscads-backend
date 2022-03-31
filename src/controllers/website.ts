@@ -35,7 +35,6 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
   res.send({results: mixedStories.map((story) => {
     delete story.html;
     delete story.updated_at;
-    delete story.related_query_id;
     delete story.social;
 
     return {
@@ -59,28 +58,21 @@ export const getWebsiteDataById = async (id: number) => {
   const prismaClient = await getPrismaClient();
 
   const websiteData = await prismaClient.website_data.findUnique({where: {id}});
-  const queryData = await prismaClient.query_data.findUnique({where: {id: Number(websiteData.related_query_id)}});
-  const storyData = await prismaClient.story_data.findUnique({where: {id: Number(queryData.related_story)}});
-  const storyIds = await prismaClient.story_ids.findMany({where: {id: Number(storyData.related_story_id)}});
-  const storyLink = await prismaClient.scrapping_links.findUnique({where: {id: 2305}});
-
-
-    
 
 
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
       titles: {
-        search: queryData.query.split(" ").join(" | "),
+        search: websiteData.related_query.split(" ").join(" | "),
       },
       descriptions: {
-        search: queryData.query.split(" ").join(" | ")
+        search: websiteData.related_query.split(" ").join(" | ")
       },
       keywords: {
-        search: queryData.query.split(" ").join(" | "),
+        search: websiteData.related_query.split(" ").join(" | "),
       },
       social: {
-        search: queryData.query.split(" ").join(" | ")
+        search: websiteData.related_query.split(" ").join(" | ")
       }
     },
     skip: 0,
@@ -103,30 +95,25 @@ export const getWebsiteDataById = async (id: number) => {
       url: websiteData.url,
     },
     queryData: {
-      id: queryData?.id,
-      query: queryData?.query,
-      links: JSON.parse(queryData?.links)
+      query: websiteData?.related_query,
+      links: JSON.parse(websiteData?.related_links)
     },
     storyData: {
-      id: storyData?.id,
-      related_articles: JSON.parse(storyData?.related_articles),
-      related_queries: JSON.parse(storyData?.related_queries)
+      related_articles: JSON.parse(websiteData?.related_articles),
+      related_queries: JSON.parse(websiteData?.related_queries)
     },
     storyIds: {
-      id: storyIds[storyIds?.length - 1]?.id || null,
-      storiesIds: storyIds?.map(s => s.story_id)
+      storiesIds: [] as string[],
     },
     storyLink: {
-      id: storyLink?.id,
-      country: storyLink?.country,
-      country_short: storyLink?.country_short,
-      category: storyLink?.category,
-      category_short: storyLink?.category_short,
+      country: websiteData?.related_country.split("-")[0].trim(),
+      country_short: websiteData?.related_country.split("-")[1].trim(),
+      category: websiteData?.related_category.split("-")[0].trim(),
+      category_short: websiteData?.related_category.split("-")[1].trim(),
     },
     allStories: mixedStories.map((story) => {
       delete story.html;
       delete story.updated_at;
-      delete story.related_query_id;
       delete story.social;
   
       return {
@@ -245,7 +232,9 @@ export const getFullStories = async (req: Request, res: Response) => {
       all_images: true,
       url: true,
       created_at: true,
-      related_query_id: true
+      related_query: true,
+      related_queries: true,
+      related_country: true
     }
   });
 
@@ -253,11 +242,6 @@ export const getFullStories = async (req: Request, res: Response) => {
 
   const filteredProperties = [];
   for(const story of websiteData) {
-    const queryData = await prismaClient.query_data.findUnique({where: {id: Number(story.related_query_id)}});
-    const storyData = await prismaClient.story_data.findUnique({where: {id: Number(queryData.related_story)}});
-    const storyIds = await prismaClient.story_ids.findUnique({where: {id: Number(storyData.related_story_id)}});
-    const storyLink = await prismaClient.scrapping_links.findUnique({where: {id: storyIds.id}});
-
 
     filteredProperties.push({
       id: story.id,
@@ -270,10 +254,10 @@ export const getFullStories = async (req: Request, res: Response) => {
       allImages: JSON.parse(story.all_images),
       source: story.url,
       time: story.created_at,
-      query: queryData.query,
-      queries: JSON.parse(storyData.related_queries),
-      country: storyLink?.country,
-      category: storyLink?.category_short,
+      query: story.related_query,
+      queries: JSON.parse(story.related_queries),
+      country: story?.related_country.split("-")[0].trim(),
+      category: story?.related_country.split("-")[1].trim(),
     });
   }
 
