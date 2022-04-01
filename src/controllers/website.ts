@@ -13,7 +13,7 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
 
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
-      titles: {
+      title: {
         search: searchQuery.split(" ").join(" | "),
       },
       // descriptions: {
@@ -45,7 +45,7 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
       id: story.id,
       images: story.images,
       keywords: story.keywords,
-      titles: story.titles,
+      titles: story.title,
       url: story.url
     };
   })});
@@ -66,7 +66,7 @@ export const getWebsiteDataById = async (id: number) => {
 
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
-      titles: {
+      title: {
         search: websiteData.related_query.split(" ").join(" | "),
       },
       // related_queries: {
@@ -96,7 +96,7 @@ export const getWebsiteDataById = async (id: number) => {
       images: websiteData.images,
       keywords: websiteData.keywords.split(","),
       social: websiteData.social,
-      titles: websiteData.titles,
+      titles: websiteData.title,
       all_images: websiteData.all_images,
       time: websiteData.created_at,
       url: websiteData.url,
@@ -125,7 +125,7 @@ export const getWebsiteDataById = async (id: number) => {
           id: story.id,
           images:story.images,
           keywords: story.keywords,
-          titles:story.titles,
+          titles:story.title,
           url: story.url
         };
       })
@@ -220,7 +220,7 @@ export const getFullStories = async (req: Request, res: Response) => {
     take: limit,
     select: {
       id:true,
-      titles: true, 
+      title: true, 
       descriptions: true, 
       keywords: true, 
       favicon: true, 
@@ -241,7 +241,7 @@ export const getFullStories = async (req: Request, res: Response) => {
 
     filteredProperties.push({
       id: story.id,
-      titles: story.titles,
+      titles: story.title,
       descriptions: story.descriptions,
       short_description: story.short_description,
       keywords: story.keywords,
