@@ -40,14 +40,18 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
     delete story.related_links;
 
     return {
-      all_images: story.all_images,
+      //@ts-ignore
+      all_images: story.all_images["allImages"],
       date: story.created_at,
-      descriptions: story.descriptions,
+      //@ts-ignore
+      descriptions: story.descriptions["descriptions"],
       id: story.id,
-      images: story.images,
+      //@ts-ignore
+      images: story.images["images"],
       keywords: story.keywords,
-      titles: story.title,
-      url: story.url
+      title: story.title,
+      url: story.url,
+      category: story.related_category
     };
   })});
 } catch(error) {
