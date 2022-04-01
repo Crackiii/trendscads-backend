@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Response, Request } from "express";
 import { getPrismaClient } from "../../prisma/client";
 
@@ -90,20 +91,27 @@ export const getWebsiteDataById = async (id: number) => {
 
   const result = {
     websiteData: {
-      descriptions:websiteData?.descriptions,
+      // @ts-ignore
+      descriptions:websiteData?.descriptions["descriptions"],
       favicon: websiteData?.favicon,
       html: websiteData.html,
-      images: websiteData.images,
+      // @ts-ignore
+      images: websiteData.images["images"],
       keywords: websiteData.keywords.split(","),
-      social: websiteData.social,
-      titles: websiteData.title,
-      all_images: websiteData.all_images,
+      // @ts-ignore
+      social: websiteData.social["social"],
+      title: websiteData.title,
+      // @ts-ignore
+      all_images: websiteData.all_images["allImages"],
       time: websiteData.created_at,
       url: websiteData.url,
       query: websiteData?.related_query,
-      links: (websiteData?.related_links),
-      related_articles: websiteData?.related_articles,
-      related_queries: websiteData?.related_queries,
+      // @ts-ignore
+      links: websiteData?.related_links["related_links"]["links"],
+      // @ts-ignore
+      related_articles: websiteData?.related_articles["related_articles"]["articles"],
+      // @ts-ignore
+      related_queries: websiteData?.related_queries["related_queries"]["queries"],
       storiesIds: [] as string[],
       country: websiteData?.related_country.split("-")[0].trim(),
       country_short: websiteData?.related_country.split("-")[1].trim(),
@@ -119,14 +127,18 @@ export const getWebsiteDataById = async (id: number) => {
         delete story.related_links;
     
         return {
-          all_images:story.all_images,
-          date: story.created_at,
-          descriptions:story.descriptions,
+          // @ts-ignore
+          all_images:story.all_images["allImages"],
+          time: story.created_at,
+          // @ts-ignore
+          descriptions:story.descriptions["descriptions"],
           id: story.id,
-          images:story.images,
-          keywords: story.keywords,
-          titles:story.title,
-          url: story.url
+          // @ts-ignore
+          images:story.images["images"],
+          keywords: story.keywords.split(","),
+          title: story.title,
+          url: story.url,
+          category: story.related_category.split("-")[0].trim(),
         };
       })
     }
@@ -241,18 +253,23 @@ export const getFullStories = async (req: Request, res: Response) => {
 
     filteredProperties.push({
       id: story.id,
-      titles: story.title,
-      descriptions: story.descriptions,
+      title: story.title,
+      //@ts-ignore
+      descriptions: story.descriptions["descriptions"],
       short_description: story.short_description,
       keywords: story.keywords,
       favicon: story.favicon,
-      social: story.social,
-      images: story.images,
-      allImages: story.all_images,
+      //@ts-ignore
+      social: story.social["social"],
+      //@ts-ignore
+      images: story.images["images"],
+      //@ts-ignore
+      allImages: story.all_images["all_images"],
       source: story.url,
       time: story.created_at,
       query: story.related_query,
-      queries: story.related_queries,
+      //@ts-ignore
+      queries: story.related_queries["related_queries"]["queries"],
       country: story?.related_country.split("-")[0].trim(),
       category: story?.related_category.split("-")[0].trim(),
     });
