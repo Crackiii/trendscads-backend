@@ -51,7 +51,7 @@ app.get("/search/videos", async (request, response)  => {
 
   response.send(data.data.results);
 } catch(error) {
-  response.send(error.message);
+  response.send({error: error.message});
 }
 });
 
@@ -63,7 +63,7 @@ app.get("/search/news", async (request, response)  => {
   
     response.send(data.data.results);
   } catch(error) {
-    response.send(error.message);
+    response.send({error: error.message});
   }
   
 });
