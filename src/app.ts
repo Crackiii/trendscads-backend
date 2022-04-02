@@ -44,19 +44,28 @@ const getVQD = async (query: string) => {
 
 
 app.get("/search/videos", async (request, response)  => {
+  try{
   const query = request.query.searchQuery;
   const vqd = await getVQD(query as string);
   const data = await axios.get(`https://duckduckgo.com/v.js?l=us-en&o=json&q=${query}&vqd=${vqd}`);
 
   response.send(data.data.results);
+} catch(error) {
+  response.send(error.message);
+}
 });
 
 app.get("/search/news", async (request, response)  => {
-  const query = request.query.searchQuery;
-  const vqd = await getVQD(query as string);
-  const data = await axios.get(`https://duckduckgo.com/news.js?l=us-en&o=json&q=${query}&vqd=${vqd}`);
-
-  response.send(data.data.results);
+  try {
+    const query = request.query.searchQuery;
+    const vqd = await getVQD(query as string);
+    const data = await axios.get(`https://duckduckgo.com/news.js?l=us-en&o=json&q=${query}&vqd=${vqd}`);
+  
+    response.send(data.data.results);
+  } catch(error) {
+    response.send(error.message);
+  }
+  
 });
 
 
