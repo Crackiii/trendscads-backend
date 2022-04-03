@@ -57,7 +57,7 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
       };
     })});
   } else {
-    res.send(404).send({error: "No stories found"});
+    res.status(404).send({error: "No stories found"});
   }
 
 
