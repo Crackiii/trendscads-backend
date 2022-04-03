@@ -172,10 +172,15 @@ export const getWebsiteData = async (req: Request, res: Response) => {
 
     return;
   }
-
   const results = await getWebsiteDataById(id);
+  
+  if(results.websiteData) {
+    res.send(results);
+  } else {
+    // respond with 404 if no results found
+    res.status(404).send({error: "No story data found"});
+  }
 
-  res.send(results);
 }; 
 
 
