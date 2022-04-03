@@ -173,8 +173,8 @@ export const getWebsiteData = async (req: Request, res: Response) => {
     return;
   }
   const results = await getWebsiteDataById(id);
-  
-  if(results.websiteData) {
+
+  if(results?.websiteData) {
     res.send(results);
   } else {
     // respond with 404 if no results found
