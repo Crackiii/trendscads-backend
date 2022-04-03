@@ -12,6 +12,7 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
   const offset = Number(req.query.offset);
   const limit = Number(req.query.limit);
 
+
   const mixedStories = await prismaClient.website_data.findMany({
     where: {
       title: {
@@ -29,31 +30,37 @@ export const getWebsiteDataBySearch = async (req: Request, res: Response) => {
     },
     skip: offset,
     take: limit
-  });
+  }).catch(console.log);
 
-  res.send({results: mixedStories.map((story) => {
-    delete story.html;
-    delete story.updated_at;
-    delete story.social;
-    delete story.related_articles;
-    delete story.related_queries;
-    delete story.related_links;
+  if(mixedStories) {
+    res.send({results: mixedStories?.map((story) => {
+      delete story.html;
+      delete story.updated_at;
+      delete story.social;
+      delete story.related_articles;
+      delete story.related_queries;
+      delete story.related_links;
+  
+      return {
+        //@ts-ignore
+        all_images: story.all_images["allImages"],
+        date: story.created_at,
+        //@ts-ignore
+        descriptions: story.descriptions["descriptions"],
+        id: story.id,
+        //@ts-ignore
+        images: story.images["images"],
+        keywords: story.keywords,
+        title: story.title,
+        url: story.url,
+        category: story.related_category
+      };
+    })});
+  } else {
+    res.send(404).send({error: "No stories found"});
+  }
 
-    return {
-      //@ts-ignore
-      all_images: story.all_images["allImages"],
-      date: story.created_at,
-      //@ts-ignore
-      descriptions: story.descriptions["descriptions"],
-      id: story.id,
-      //@ts-ignore
-      images: story.images["images"],
-      keywords: story.keywords,
-      title: story.title,
-      url: story.url,
-      category: story.related_category
-    };
-  })});
+
 } catch(error) {
   console.log("getWebsiteDataBySearch() - ", error.message);
 }
