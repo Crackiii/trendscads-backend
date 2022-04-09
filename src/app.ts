@@ -1,5 +1,6 @@
 import axios from "axios";
 import express from "express";
+import { getGoogleDailyTrends, getGoogleRealTimeTrends, getYoutubeTrends } from "./controllers/trends-handlers";
 import { getFullStories, getWebsiteData, getWebsiteDataBySearch } from "./controllers/website";
 
 // Create Express server
@@ -69,4 +70,39 @@ app.get("/search/news", async (request, response)  => {
 });
 
 
+app.get("/home/google/realtime", async (request, response)  => {
+  try {
+    const country = request.query.country;
+    const data = await getGoogleRealTimeTrends(country as string);
+
+    response.send(data);
+  } catch(errror) {
+    response.send({data: [], error: errror.message});
+  }
+});
+
+app.get("/home/google/daily", async (request, response)  => {
+  try {
+    const country = request.query.country;
+    const data = await getGoogleDailyTrends(country as string);
+
+    response.send(data);
+  } catch(errror) {
+    response.send({data: [], error: errror.message});
+  }
+});
+
+app.get("/home/youtube", async (_, response)  => {
+  try {
+    const data = await getYoutubeTrends();
+
+    response.send(data);
+  } catch(errror) {
+    response.send({data: [], error: errror.message});
+  }
+});
+
+
+
 export default app;
+
