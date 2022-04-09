@@ -2,10 +2,6 @@ import axios from "axios";
 import { Cluster } from "puppeteer-cluster";
 import { youtube_trends } from "./configs";
 
-import * as puppeteer from "puppeteer";
-
-const instance: puppeteer.Browser = null;
-
 const cookieValue = "";
 export const DEFAULT_LANGUAGE = "en-US";
 export const DEFAULT_TIMEZONE = "-60";
@@ -169,44 +165,3 @@ const searchLinks = async (links: string[]) => {
 
 
 
-const browserLessConnect = async () => {
-  if(!instance) {
-    return await puppeteer.connect({
-      browserWSEndpoint: "ws://localhost:8082"
-    });
-  }
-  
-  return instance;
-};
-
-export const getGoogleSearchResultsByQueriesBrowserless = async (queries: string[]) => {
-
-  const browser = await browserLessConnect();
-  const queriesData: any = [];
-
-  for(const query of queries) {
-    const page = await browser.newPage();
-    await page.goto("https://www.youtube.com/feed/trending");
-    await page.screenshot({path: "failed_picture.png"});
-    await page.waitForSelector("#contents");
-    const links = await page.evaluate(() => {
-      const r = document.querySelectorAll("#dismissible");
-      const videos = [...r].map(video => {
-        const t = video.querySelector("#thumbnail img"); 
-        const txt = video.querySelector("h3");
-        return {
-          thumbnail: t?.getAttribute("src"),
-          title: txt?.textContent?.trim(),
-          link: video?.querySelector("a")?.getAttribute("href")
-        };
-      }).filter(v => v.title);
-
-      return videos;
-    });
-    queriesData.push(...links);
-    await page.close();
-  }
-
-  browser.close();
-  return queriesData;
-};
